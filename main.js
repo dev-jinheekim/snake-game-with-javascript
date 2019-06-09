@@ -1,13 +1,18 @@
 class Snake {
   color = 'green'
+  direction = 'east'
   location = { x: 0, y: 0 }
 
   crawl () {
-    console.log('call crawl', this.location.x)
-    this.location.x = this.location.x + 1
+    switch (this.direction) {
+      case 'east': this.location.x = this.location.x + 1; break;
+      case 'west': this.location.x = this.location.x - 1; break;
+      case 'north': this.location.y = this.location.y - 1; break;
+      case 'south': this.location.y = this.location.y + 1; break;
+    }
   }
-}
 
+}
 
 class Game {
 
@@ -39,11 +44,23 @@ class Game {
 
   play () {
     this.createBoard(30, 30)
-    setInterval(() => {
+
+    document.addEventListener('keydown', (event) => {
+      const keyName = event.key
+      switch (keyName) {
+        case 'ArrowUp': this.snake.direction = 'north'; break;
+        case 'ArrowDown': this.snake.direction = 'south'; break;
+        case 'ArrowLeft': this.snake.direction = 'west'; break;
+        case 'ArrowRight': this.snake.direction = 'east'; break;
+        case 'Escape': clearInterval(interval); break;
+      }
+    })
+
+    const interval = setInterval(() => {
       this.changeAllBackgroundColor()
       this.changeBackgroundColor(this.snake.location.x, this.snake.location.y, this.snake.color)
       this.snake.crawl()
-    }, 1000)
+    }, 200)
   }
 
 }
