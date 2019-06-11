@@ -26,24 +26,52 @@ function changeBackgroundColor (x, y, color) {
 class Snake {
   color = 'green'
   direction = 'east'
-  location = { x: 0, y: 0 }
+  locations = [{ x: 0, y: 0 }]
 
   crawl () {
     switch (this.direction) {
       case 'east':
-        this.location.x = this.location.x + 1
+        this.locations.unshift({x: this.locations[0].x + 1, y: this.locations[0].y})
         break
       case 'west':
-        this.location.x = this.location.x - 1
+        this.locations.unshift({x: this.locations[0].x - 1, y: this.locations[0].y})
         break
       case 'north':
-        this.location.y = this.location.y - 1
+          this.locations.unshift({x: this.locations[0].x, y: this.locations[0].y - 1})
         break
       case 'south':
-        this.location.y = this.location.y + 1
+          this.locations.unshift({x: this.locations[0].x, y: this.locations[0].y + 1})
         break
     }
+    this.locations.pop()
   }
+
+  grow () {
+
+    let x = this.locations[this.locations.length - 1].x
+    let y = this.locations[this.locations.length - 1].y
+
+    switch (this.direction) {
+      case 'east': x = x + 1
+        break
+      case 'west': x = x - 1
+        break
+      case 'north': y = y - 1
+        break
+      case 'south': y = y + 1
+        break
+    }
+
+    this.locations.push({x: x, y: y})
+    console.log(this.locations);
+  }
+
+  display() {
+    this.locations.forEach((location) => {
+      changeBackgroundColor(location.x, location.y, this.color)
+    })
+  }
+
 }
 
 
@@ -56,6 +84,11 @@ class Apple {
     this.location.x = Math.floor(Math.random() * game.rowCount)
     this.location.y = Math.floor(Math.random() * game.colCount)
   }
+
+  display() {
+    changeBackgroundColor(this.location.x, this.location.y, this.color)
+  }
+
 }
 
 
@@ -64,15 +97,13 @@ class Game {
   board = document.getElementById('board')
   snake = new Snake()
   apple = new Apple()
-  rowCount = 30
-  colCount = 30
+  rowCount = 15
+  colCount = 15
 
-  play () {
-
-    createBoard(this.rowCount, this.colCount)
-    this.apple.create()
+  init() {
 
     document.addEventListener('keydown', (event) => {
+      console.log(event)
       const keyName = event.key
       switch (keyName) {
         case 'ArrowUp':
@@ -90,16 +121,22 @@ class Game {
         case 'Escape':
           clearInterval(interval)
           break
+        // case 'Space':
       }
     })
 
+    createBoard(this.rowCount, this.colCount)
+    this.apple.create()
+
     const interval = setInterval(() => {
+
       changeAllBackgroundColor()
-      changeBackgroundColor(this.snake.location.x, this.snake.location.y, this.snake.color)
-      changeBackgroundColor(this.apple.location.x, this.apple.location.y, this.apple.color)
+      this.apple.display()
+      this.snake.display()
       this.snake.crawl()
 
-      if (this.snake.location.x == this.apple.location.x && this.snake.location.y == this.apple.location.y) {
+      if (this.snake.locations[0].x == this.apple.location.x && this.snake.locations[0].y == this.apple.location.y) {
+        this.snake.grow()
         this.apple.create()
       }
 
@@ -110,4 +147,4 @@ class Game {
 
 
 const game = new Game()
-game.play()
+game.init()
