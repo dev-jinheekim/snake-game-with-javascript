@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>타이머 슬라이드 배너</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+
+    *{
+      padding: 0;
+      margin: 0;
+    }
+    li{
+      list-style: none;
+      height: 180px;
+    }
+    .banner{
+      /*position: relative;*/
+      width: 400px;
+      margin: 100px auto;
+    }
+    .wrap{
+      position: relative;
+      width: 404px;
+      height: 184px;
+      border: 2px solid red;
+      /*overflow: hidden;*/
+      box-sizing: border-box;
+    }
+    .rolling{
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 1200px;
+      height: 180px;
+    }
+    .rolling li{
+      width: 400px;
+      color: #fff;
+      float: left;
+    }
+    .rolling li p{
+      text-align: center;
+      font-weight: bold;
+      font-size: 30px;
+      line-height: 6;
+    }
+    .rolling li:nth-child(1){
+      background: darkblue;
+    }
+    .rolling li:nth-child(2){
+      background: limegreen;
+    }
+    .rolling li:nth-child(3){
+      background: blueviolet;
+    }
+    .paging{
+
+    }
+    .paging li{
+      padding: 10px 20px;
+      font-weight: bold;
+      float: left;
+      cursor: pointer;
+    }
+    .paging li:nth-child(2){
+      float: right;
+    }
+
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+</head>
+
+<body>
+
+  <!--배너의 너비를 100%로 적용하고 타이머를 걸어 자동으로 이동하도록 만들기-->
+  <div class="banner">
+    <div class="wrap">
+      <ul class="rolling">
+        <li><p>1</p></li>
+        <li><p>2</p></li>
+        <li><p>3</p></li>
+      </ul>
+    </div>
+    <ul class="paging">
+      <li class="prev">&lt; prev</li>
+      <li class="next">next &gt;</li>
+    </ul>
+  </div>
+
+<script>
+
+  $(function () {
+      var current = 0,
+          $ul = $(".rolling"),
+          $li = $(".rolling li"),
+          $prev = $(".prev"),
+          $next = $(".next"),
+          total = $li.length,
+          delay = 700,
+          w = $li.width,
+          old;
+
+      // next 누를 시 + , prev 누를 시 - 방향으로 이동
+      $prev.on("click",function () {
+          old = current;
+          current = current - 1;
+          $ul.stop().animate({marginLeft: "+=400px"});
+          $ul.prepend(li);
+      })
+
+      $next.on("click",function() {
+          old = current;
+          current = current + 1;
+          $ul.stop().animate({marginLeft: '-=400px'});
+          $ul.append(li);
+      })
+
+
+      // 0.7초마다 왼쪽으로 배너가 자동으로 굴러감
+      timer = setInterval(rol,delay);
+
+      // 다 굴러가면 세팅
+
+  })
+
+</script>
+
+</body>
+</html>
