@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>타이머 슬라이드 배너</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body{
+      margin: 0;
+    }
+    li{
+      list-style: none;
+    }
+    .banner{
+      width: 100%;
+    }
+    .wrap{
+      width: 100%;
+    }
+    .rolling{
+      position: relative;
+      width: 100%;
+      height: 600px;
+      margin: 0;
+      padding: 0;
+    }
+    .rolling li{
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 600px;
+      color: #fff;
+      text-align: center;
+      line-height: 3;
+    }
+    .rolling li:nth-child(1){
+      background: #333;
+    }
+    .rolling li:nth-child(2){
+      background: #666;
+    }
+    .rolling li:nth-child(3){
+      background: #999;
+    }
+
+
+    .paging{
+      position: absolute;
+      width: 100%;
+      padding: 0;
+    }
+    .paging li{
+      cursor: pointer;
+    }
+    .prev{
+      float: left;
+    }
+    .next{
+      float: right;
+    }
+
+    .dot{
+      margin-left: 50%;
+    }
+    .dot a{
+      display: block;
+      float: left;
+      margin: 20px 4px;
+      width: 14px;
+      height: 14px;
+      background: #5AAFFF;
+      border-radius: 50%;
+    }
+    .dot a.active{
+      background: orangered;
+    }
+
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+</head>
+
+<body>
+
+  <!--배너의 너비를 100%로 적용하고 타이머를 걸어 자동으로 이동하도록 만들기-->
+  <div class="banner">
+    <div class="wrap">
+      <ul class="rolling">
+        <li><p>1</p></li>
+        <li><p>2</p></li>
+        <li><p>3</p></li>
+      </ul>
+      <ul class="paging">
+        <li class="prev">&lt; prev</li>
+        <li class="next">next &gt;</li>
+      </ul>
+      <div class="dot">
+        <a href="#" class="active"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+      </div>
+    </div>
+  </div>
+
+<script>
+
+  $(function () {
+      var current = 0;
+      var n = $('.rolling li').length; // rolling 페이지 개수
+      var timer = 0; // 타이머 함수
+      var delay = 800; // 페이지 넘어가는 타이머 시간
+      var $li = $(".rolling li"); // 롤링 ul li
+      var $next = $(".next"); // next 버튼
+      var $prev = $(".prev"); // prev 버튼
+      var $dot = $(".dot a"); // 도트 페이징
+
+      // ** 배너를 굴리기 위해 필요한 것 old current 로 새로 들어올 페이지와 기존에 위치해 있을 페이지의 "구분"
+
+      $li.hide().first().show(); // 첫번째 장만 보이기
+
+      // 반복문으로 배너 연속 굴리기 with 타이머
+      timer = setInterval(make,delay);
+      function make() {
+          // 타이머 함수를 구성하는
+          // make 함수의 역할은
+
+          // current를 오른쪽에서 왼쪽으로 움직여 주고
+          // 페이지 이동이 다 끝났을 때 다시 첫번째 장으로 이동시켜 주는 것
+
+          // current를 증가시키는 선언
+          current++;
+
+          // delay 시간 동안 li가 fadein & out 동작을 함
+          if(current >= n) {
+              current = 0
+          }
+          // 위 문이 끝나면 banner 함수를 시행
+          banner();
+      }
+
+      // next prev 버튼으로 페이지 넘기기
+      $next.on("click",function () {
+          current++;
+          if(current >= n){
+              current = 0;
+          }
+          clearInterval(timer);
+          timer();
+      })
+
+      $prev.on("click",function () {
+          current--;
+          if(current < 0){
+              current = n;
+          }
+          clearInterval(timer);
+          timer();
+      })
+      
+      // dot 버튼 클릭시 헤당 번호의 페이지가 fadein
+
+      
+      function banner() {
+          $li.stop().hide().eq(current).show();
+          $dot.removeClass("active");
+          $dot.eq(current).addClass("active");
+
+          for(i =0; i <= n; i++){
+              current++;
+              $li.eq(current).fadeIn(500);
+          }
+      }
+
+  })
+
+
+</script>
+
+</body>
+</html>

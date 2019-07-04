@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>타이머 슬라이드 배너</title>
+  <link href="css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body{
+      margin: 0;
+    }
+    li{
+      list-style: none;
+    }
+    .banner{
+      width: 1200px;
+    }
+    .wrap{
+      width: 400px;
+      height: 200px;
+      border: 2px solid red;
+    }
+    .rolling{
+      width: 1200px;
+      height: 200px;
+      margin: 0;
+      padding: 0;
+    }
+    .rolling li{
+      float: left;
+      width: 400px;
+      height: 200px;
+      color: #fff;
+      text-align: center;
+      line-height: 3;
+    }
+    .rolling li:nth-child(1){
+      background: #333;
+    }
+    .rolling li:nth-child(2){
+      background: #666;
+    }
+    .rolling li:nth-child(3){
+      background: #999;
+    }
+
+
+    .paging{
+      width: 400px;
+      padding: 0;
+    }
+    .paging li{
+      cursor: pointer;
+    }
+    .prev{
+      float: left;
+    }
+    .next{
+      float: right;
+    }
+
+    .dot{
+      margin-left: 140px;
+    }
+    .dot a{
+      display: block;
+      float: left;
+      margin: 0 4px;
+      width: 14px;
+      height: 14px;
+      background: #5AAFFF;
+      border-radius: 50%;
+    }
+    .dot a.active{
+      background: orangered;
+    }
+
+  </style>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+
+</head>
+
+<body>
+
+  <!--배너의 너비를 100%로 적용하고 타이머를 걸어 자동으로 이동하도록 만들기-->
+  <div class="banner">
+    <div class="wrap">
+      <ul class="rolling">
+        <li><p>1</p></li>
+        <li><p>2</p></li>
+        <li><p>3</p></li>
+      </ul>
+      <ul class="paging">
+        <li class="prev">&lt; prev</li>
+        <li class="next">next &gt;</li>
+      </ul>
+      <div class="dot">
+        <a href="#" class="active"></a>
+        <a href="#"></a>
+        <a href="#"></a>
+      </div>
+    </div>
+  </div>
+
+<script>
+  
+  $(function () {
+      var current = 0;
+      var n = $('.rolling li').length; // rolling 페이지 개수
+      var timer = 0; // 타이머 함수
+      var delay = 800; // 페이지 넘어가는 타이머 시간
+      var $ul = $(".rolling"); // rolling
+      var $li = $(".rolling li"); // 롤링 ul li
+      var $next = $(".next"); // next 버튼
+      var $prev = $(".prev"); // prev 버튼
+      var $dot = $(".dot a"); // 도트 페이징
+
+
+      // ul이 오른쪽에서 왼쪽으로 자동 이동
+      // timer = setInterval(banner,delay);
+
+      // prev next를 눌렀을 때 반응
+      $prev.on("click",function () {
+          current--;
+          $ul.css("left","0").stop().animate({marginLeft:"-=400px"});
+          if(current < 0){
+              current = n-1;
+          }
+      })
+      $next.on("click",function () {
+          current++;
+          $ul.css("left","0").stop().animate({marginLeft:"+=400px"});
+      })
+
+      // 도트 페이징을 눌렀을 때 반응
+      $dot.on("click",function () {
+          $dot.removeClass("active").$(this).addClass("active");
+          clearInterval();
+          banner();
+      })
+      
+      
+      function banner() {
+          current++;
+          $ul.css("left","0").stop().animate({marginLeft:"-=400px"}).append("current-1");
+          if(current >= n){
+              current = 0;
+          }
+      }
+
+  })
+
+
+
+</script>
+
+</body>
+</html>
